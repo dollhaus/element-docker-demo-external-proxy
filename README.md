@@ -1,3 +1,15 @@
+# element-docker-demo-apache
+
+This is a fork of [element-docker-demo](https://github.com/element-hq/element-docker-demo) designed to run behind an externally provided host. Normally this would be an apache or nginx server, configured with a reverse proxy. 
+
+As such, all mkcert and letsencrypt integrations have been eliminated, and the administrator is expected to handle TLS themselves.
+
+A possibility of push notification integration is also on the horizon, potentially with ntfy. This may take some work, and it may be a better idea to change the approach to notifications from inside synapse/element. 
+
+Below is the original text of the repository prior to forking.
+
+
+
 # element-docker-demo
 
 element-docker-demo is a minimal example of how to rapidly stand up a Matrix 2.0 stack on macOS or Linux using Docker,
