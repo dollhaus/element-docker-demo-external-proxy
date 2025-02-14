@@ -1,0 +1,31 @@
+<VirtualHost *:80>
+    ServerName ***domain***.***tld***    
+    #This should be your web frontend. In this example, the element server is hosted on a subdomain.
+    
+    #Next, set up well-known challenges. Here, we abuse Apache's ErrorDocument
+    #    function to dynamically return the appropriate JSON
+    
+    <Location "/.well-known/matrix/client">
+        ErrorDocument 200 '{"m.homeserver":{"base_url":"https://***HOMESERVER_FQDN***"},"m.identity_server":{"base_url":"***IDENTITY_SERVER_URL***"},"org.matrix.msc2965.authentication":{"issuer":"https://***DOMAIN***/","account":"https://***MAS_FQDN***/account"},"org.matrix.msc4143.rtc_foci":[{"type":"livekit","livekit_service_url":"https://***LIVEKIT_JWT_FQDN***"}]}'
+        Redirect 200 /
+        Header always set Content-Type application/json
+        Header always set Access-Control-Allow-Origin *
+    </Location>
+    <Location "/.well-known/matrix/server">
+        ErrorDocument 200 '{"m.server": "***HOMESERVER_FQDN***:443"}'
+        Redirect 200 /
+        Header always set Content-Type application/json
+        Header always set Access-Control-Allow-Origin *
+    </Location>
+    <Location "/.well-known/matrix/support">
+        ErrorDocument 200 '{"support_page":"https://matrix.org/contact/","contacts":[{"role":"m.role.admin","email_address":"***ABUSE_SUPPORT_EMAIL***"},{"role":"m.role.security","email_address":"***SECURITY_SUPPORT_EMAIL***"}]}'
+        Redirect 200 /
+        Header always set Content-Type application/json
+        Header always set Access-Control-Allow-Origin *
+    </Location>
+    
+    
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerName ***subdomain***.***domain***.***tld***
