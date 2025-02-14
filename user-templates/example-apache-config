@@ -1,6 +1,11 @@
+# We use port 80 here because LetsEncrypt's certbot will automatically add 443 SSL redirects.
+# Make sure you use 443 as the proxy port, because LetsEncrypt won't change anything else 
+#     about the vHost.
 <VirtualHost *:80>
     ServerName ***domain***.***tld***    
     #This should be your web frontend. In this example, the element server is hosted on a subdomain.
+    
+    #You can add some basic web page content here, or proxy it to another web application, or something else.
     
     #Next, set up well-known challenges. Here, we abuse Apache's ErrorDocument
     #    function to dynamically return the appropriate JSON
@@ -23,9 +28,16 @@
         Header always set Content-Type application/json
         Header always set Access-Control-Allow-Origin *
     </Location>
+    <Location "/.well-known/matrix/server">
+        ErrorDocument 200 '{"call":{"widget_url":"https:***ELEMENT_CALL_FQDN***"}}'
+        Redirect 200 /
+        Header always set Content-Type application/json
+        Header always set Access-Control-Allow-Origin *
+    </Location>
     
     
 </VirtualHost>
 
 <VirtualHost *:80>
     ServerName ***subdomain***.***domain***.***tld***
+    
