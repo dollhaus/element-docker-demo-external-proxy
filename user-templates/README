@@ -1,0 +1,1 @@
+These templates are not drop-in solutions for any part of the project. They serve only as examples for an external proxy configured with Apache. You may want to adjust for Nginx, Caddy, etc. Running behind IIS is not tested or supported, but probably works with a little fiddle.
