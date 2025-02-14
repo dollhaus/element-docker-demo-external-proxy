@@ -2,7 +2,7 @@
 
 This is a fork of [element-docker-demo](https://github.com/element-hq/element-docker-demo) designed to run behind an externally provided host. Normally this would be an apache or nginx server, configured with a reverse proxy. 
 
-As such, all mkcert and letsencrypt integrations have been eliminated, and the administrator is expected to handle TLS themselves.
+As such, all mkcert and letsencrypt integrations ~~have been~~ will be eliminated, and the administrator is expected to handle TLS themselves.
 
 A possibility of push notification integration is also on the horizon, potentially with ntfy. This may take some work, and it may be a better idea to change the approach to notifications from inside synapse/element. 
 
