@@ -1,6 +1,6 @@
 # We use port 80 here because LetsEncrypt's certbot will automatically add 443 SSL redirects.
-# Make sure you use 443 as the proxy port, because LetsEncrypt won't change anything else 
-#     about the vHost.
+# Make sure you use 80 as the proxy port, because the base apache instance does not require
+#     a cert - and can't get one anyway.
 
 #See .env-sample for the appropriate aliases. These should all be managed by the script eventually
 
@@ -51,8 +51,8 @@
     ServerAlias ${ELEMENT_CALL_FQDN}
     ServerAlias ${LIVEKIT_FQDN}
     ServerAlias ${LIVEKIT_JWT_FQDN}
-    ProxyPass / ${SERVER_IP}:443/ nocanon
-    ProxyPassReverse / ${SERVER_IP}:443/
+    ProxyPass / ${SERVER_IP}:80/ nocanon
+    ProxyPassReverse / ${SERVER_IP}:80/
     ProxyPreserveHost On
     ProxyAddHeaders On
     RequestHeader set X-Forwarded-Proto "http"
