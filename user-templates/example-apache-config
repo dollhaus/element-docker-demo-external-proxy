@@ -53,4 +53,7 @@
     ServerAlias ${LIVEKIT_JWT_FQDN}
     ProxyPass / ${SERVER_IP}:443/ nocanon
     ProxyPassReverse / ${SERVER_IP}:443/
-    ProxyPreserveHost
+    ProxyPreserveHost On
+    ProxyAddHeaders On
+    RequestHeader set X-Forwarded-Proto "http"
+</VirtualHost>
