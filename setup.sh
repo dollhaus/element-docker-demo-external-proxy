@@ -14,6 +14,14 @@ touch secrets/livekit/livekit_{api,secret}_key \
       secrets/postgres/postgres_password \
       secrets/synapse/signing.key
 
+# establish the IP address of the server we're setting up on
+# use the first argument of hostname -I. This might be stupid if more complex network structures are in place...
+
+ipaddrstring=$(hostname -I)
+set -- $ipaddrstring
+SERVER_IP=$(echo $1)
+
+
 # grab an env if we don't have one already
 if [[ ! -e .env  ]]; then
     cp .env-sample .env
@@ -32,34 +40,34 @@ if [[ ! -e .env  ]]; then
         fi
     fi
 
-    # SSL setup
-    read -p "Use local mkcert CA for SSL? [y/n] " use_mkcert
-    if [[ "$use_mkcert" =~ ^[Yy]$ ]]; then
-	if ! [ -x "$(command -v mkcert)" ]; then
-            echo "Please install mkcert from brew/apt/yum etc"
-	    exit
-        fi
-        mkcert -install
-        mkcert $DOMAIN '*.'$DOMAIN
-        mkdir -p data/ssl
-        mv ${DOMAIN}+1.pem data/ssl/fullchain.pem
-        mv ${DOMAIN}+1-key.pem data/ssl/privkey.pem
-        cp "$(mkcert -CAROOT)"/rootCA.pem data/ssl/ca-certificates.crt
-        # borrow letsencrypt's SSL config
-        curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf > "data/ssl/options-ssl-nginx.conf"
-        curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem > "data/ssl/ssl-dhparams.pem"
-        success=true
-    else
-        read -p "Use letsencrypt for SSL? [y/n] " use_letsencrypt
-        if [[ "$use_letsencrypt" =~ ^[Yy]$ ]]; then
-	    mkdir -p data/ssl
-            touch data/ssl/ca-certificates.crt # will get overwritten by init-letsencrypt.sh
-            source ./init-letsencrypt.sh
-            success=true
-        else
-            echo "Please put a valid {privkey,fullchain}.pem and ca-certificates.crt into data/ssl/"
-        fi
-    fi
+#    # SSL setup
+#    read -p "Use local mkcert CA for SSL? [y/n] " use_mkcert
+#    if [[ "$use_mkcert" =~ ^[Yy]$ ]]; then
+#	if ! [ -x "$(command -v mkcert)" ]; then
+#            echo "Please install mkcert from brew/apt/yum etc"
+#	    exit
+#        fi
+#        mkcert -install
+#        mkcert $DOMAIN '*.'$DOMAIN
+#        mkdir -p data/ssl
+#        mv ${DOMAIN}+1.pem data/ssl/fullchain.pem
+#        mv ${DOMAIN}+1-key.pem data/ssl/privkey.pem
+#        cp "$(mkcert -CAROOT)"/rootCA.pem data/ssl/ca-certificates.crt
+#        # borrow letsencrypt's SSL config
+#        curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf > "data/ssl/options-ssl-nginx.conf"
+#        curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem > "data/ssl/ssl-dhparams.pem"
+#        success=true
+#    else
+#        read -p "Use letsencrypt for SSL? [y/n] " use_letsencrypt
+#        if [[ "$use_letsencrypt" =~ ^[Yy]$ ]]; then
+#	    mkdir -p data/ssl
+#            touch data/ssl/ca-certificates.crt # will get overwritten by init-letsencrypt.sh
+#            source ./init-letsencrypt.sh
+#            success=true
+#        else
+#            echo "Please put a valid {privkey,fullchain}.pem and ca-certificates.crt into data/ssl/"
+#        fi
+#    fi
 else
     echo ".env already exists; move it out of the way first to re-setup"
 fi
