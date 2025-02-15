@@ -6,6 +6,21 @@ As such, all mkcert and letsencrypt integrations ~~have been~~ will be eliminate
 
 A possibility of push notification integration is also on the horizon, potentially with ntfy. This may take some work, and it may be a better idea to change the approach to notifications from inside synapse/element. 
 
+# TODO
+
+- Add public facing IP entry to setup script
+- Substitute aliases in sample apache config for actual values and save the config for later access
+- Check if any of the MAS stuff needs to be added to the apache proxy
+- Replace nginx with apache in dockerfile
+- Add setup variables for apache in data templates dir
+- Make sure element is happy with 8080 ports - local apache does not need a cert
+  
+
+
+
+
+
+
 Below is the original text of the repository prior to forking.
 
 
