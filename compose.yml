@@ -324,3 +324,36 @@ services:
         condition: service_completed_successfully
       livekit:
         condition: service_started
+
+# Need to set up authorisation here. Maybe mas can do it.
+# this most definitely won't work yet. Needs more attention.
+  ntfy:
+    image: binwiederhier/ntfy
+    command:
+      - serve
+    environment:
+      - TZ=UTC
+      NTFY_BASE_URL: http://ntfy.example.com
+      NTFY_CACHE_FILE: /var/lib/ntfy/cache.db
+      NTFY_AUTH_FILE: /var/lib/ntfy/auth.db
+      NTFY_AUTH_DEFAULT_ACCESS: deny-all
+      NTFY_BEHIND_PROXY: true
+      NTFY_ATTACHMENT_CACHE_DIR: /var/lib/ntfy/attachments
+      NTFY_ENABLE_LOGIN: true
+      NTFY_UPSTREAM_BASE_URL: https://ntfy.sh
+      NTFY_WEB_PUSH_PUBLIC_KEY: <public_key>
+      NTFY_WEB_PUSH_PRIVATE_KEY: <private_key>
+      NTFY_WEB_PUSH_FILE: /var/lib/ntfy/webpush.db
+      NTFY_WEB_PUSH_EMAIL_ADDRESS: <email>
+    user: UID:GID
+    volumes:
+      - ${VOLUME_PATH}/data/ntfy/cache:/var/cache/ntfy
+      - ${VOLUME_PATH}/data/ntfy/etc:/etc/ntfy
+      - ${VOLUME_PATH}/data/ntfy/lib:/var/lib/ntfy
+    restart: unless-stopped
+    ports:
+      - 639:80
+    depends_on:
+      element-web:
+        condition: service_healthy #is this a docker thing? need to check
+    
